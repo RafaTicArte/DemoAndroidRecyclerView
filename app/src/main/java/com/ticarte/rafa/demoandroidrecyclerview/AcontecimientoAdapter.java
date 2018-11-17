@@ -16,8 +16,10 @@ import java.util.ArrayList;
  *
  * Hay que añadir al proyecto la siguiente
  * dependencia en el archivo /app/build.gradle
- * 'com.android.support:recyclerview-v7:+
+ * con la versión que estemos trabajando
+ * 'com.android.support:recyclerview-v7:27.1.1'
  */
+
 
 public class AcontecimientoAdapter
         extends RecyclerView.Adapter<AcontecimientoAdapter.AcontecimientoViewHolder>
