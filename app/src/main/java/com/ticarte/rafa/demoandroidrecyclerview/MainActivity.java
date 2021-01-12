@@ -1,9 +1,12 @@
 package com.ticarte.rafa.demoandroidrecyclerview;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<AcontecimientoItem> items;
+    private AcontecimientoAdapter adaptador;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +34,13 @@ public class MainActivity extends AppCompatActivity {
         items.add(new AcontecimientoItem("1", "Primer acontecimiento"));
         items.add(new AcontecimientoItem("2", "Segundo acontecimiento"));
         items.add(new AcontecimientoItem("3", "Tercer acontecimiento"));
+        items.add(new AcontecimientoItem("4", "Cuarto acontecimiento"));
 
         // Inicializa el RecyclerView
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         // Crea el Adaptador con los datos de la lista anterior
-        AcontecimientoAdapter adaptador = new AcontecimientoAdapter(items);
+        adaptador = new AcontecimientoAdapter(items);
 
         // Asocia el elemento de la lista con una acción al ser pulsado
         adaptador.setOnClickListener(new View.OnClickListener() {
@@ -53,5 +58,28 @@ public class MainActivity extends AppCompatActivity {
 
         // Muestra el RecyclerView en vertical
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Define la acción de desplazamiento a derecha y/o izquierda
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                Log.d("DemoAndroidRecyclerView", "Dirección de desplazamiento: " + direction);
+                int position = viewHolder.getAdapterPosition();
+                if(items.remove(position)!=null){
+                    Toast.makeText(MainActivity.this, "Posición " + position + " " + getResources().getString(R.string.deleted_ok), Toast.LENGTH_SHORT).show();
+                    adaptador.notifyDataSetChanged();
+                }else{
+                    Toast.makeText(MainActivity.this, "Posición " + position + " " + getResources().getString(R.string.deleted_failed), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // Asocia la acción de desplazamiento al RecyclerView
+        helper.attachToRecyclerView(recyclerView);
     }
 }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DemoAndroidRecyclerView</string>
+    <string name="deleted_ok">\"Eliminado correctamente\"</string>
+    <string name="deleted_failed">Error al eliminar</string>
 </resources>
